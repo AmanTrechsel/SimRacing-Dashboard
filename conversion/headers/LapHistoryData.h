@@ -1,0 +1,8 @@
+uint32_t m_lapTimeInMS
+uint16_t m_sector1TimeInMS
+uint8_t m_sector1TimeMinutes
+uint16_t m_sector2TimeInMS
+uint8_t m_sector1TimeMinutes
+uint16_t m_sector3TimeInMS
+uint8_t m_sector3TimeMinutes
+uint8_t m_lapValidBitFlags

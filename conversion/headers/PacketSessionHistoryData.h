@@ -1,0 +1,10 @@
+PacketHeader m_header
+uint8_t m_carIdx
+uint8_t m_numLaps
+uint8_t m_numTyreStints
+uint8_t m_bestLapTimeLapNum
+uint8_t m_bestSector1LapNum
+uint8_t m_bestSector2LapNum
+uint8_t m_bestSector3LapNum
+LapHistoryData m_lapHistoryData[100]
+TyreStintHistoryData m_tyreStintsHistoryData[8];

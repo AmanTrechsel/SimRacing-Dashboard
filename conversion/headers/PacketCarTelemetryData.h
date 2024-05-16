@@ -1,0 +1,5 @@
+PacketHeader m_header
+CarTelemetryData m_carTelemetryData[22];
+uint8_t m_mfdPanelIndex
+uint8_t m_mfdPanelIndexSecondaryPlayer
+int8_t m_suggestedGear

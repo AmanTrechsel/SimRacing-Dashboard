@@ -1,0 +1,8 @@
+uint8_t m_sessionType
+uint8_t m_timeOffset
+uint8_t m_weather
+int8_t m_trackTemperature
+int8_t m_trackTemperatureChange
+int8_t m_airTemperature
+int8_t m_airTemperatureChange
+uint8_t m_rainPercentage

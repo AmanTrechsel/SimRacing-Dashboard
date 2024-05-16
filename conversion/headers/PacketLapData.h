@@ -1,0 +1,4 @@
+PacketHeader m_header
+LapData m_lapData[22]
+uint8_t m_timeTrialPBCarIdx
+uint8_t m_timeTrialRivalCarIdx

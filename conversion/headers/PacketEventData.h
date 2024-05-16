@@ -1,0 +1,3 @@
+PacketHeader m_header
+uint8_t m_eventStringCode[4]
+EventDataDetails m_eventDetails

@@ -1,0 +1,27 @@
+uint8_t m_tractionControl
+uint8_t m_antiLockBrakes
+uint8_t m_fuelMix
+uint8_t m_frontBrakeBias
+uint8_t m_pitLimiterStatus
+float m_fuelInTank
+float m_fuelCapacity
+float m_fuelRemainingLaps
+uint16_t m_maxRPM
+uint16_t m_idleRPM
+uint8_t m_maxGears
+uint8_t m_drsAllowed
+uint16_t m_drsActivationDistance
+uint8_t m_actualTyreCompound
+
+uint8_t m_visualTyreCompound
+
+uint8_t m_tyresAgeLaps
+int8_t m_vehicleFiaFlags
+float m_enginePowerICE
+float m_enginePowerMGUK
+float m_ersStoreEnergy
+uint8_t m_ersDeployMode
+float m_ersHarvestedThisLapMGUK
+float m_ersHarvestedThisLapMGUH
+float m_ersDeployedThisLap
+uint8_t m_networkPaused

@@ -1,0 +1,3 @@
+uint8_t m_endLap
+uint8_t m_tyreActualCompound
+uint8_t m_tyreVisualCompound

@@ -1,0 +1,14 @@
+uint8_t m_position
+uint8_t m_numLaps
+uint8_t m_gridPosition
+uint8_t m_points
+uint8_t m_numPitStops
+uint8_t m_resultStatus
+uint32_t m_bestLapTimeInMS
+double m_totalRaceTime
+uint8_t m_penaltiesTime
+uint8_t m_numPenalties
+uint8_t m_numTyreStints
+uint8_t m_tyreStintsActual[8]
+uint8_t m_tyreStintsVisual[8]
+uint8_t m_tyreStintsEndLaps[8]

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>NHL Stenden Emmen - F1 2023 SimRacing Dashboard</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/normalize.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js" integrity="sha512-aMGMvNYu8Ue4G+fHa359jcPb1u+ytAF+P2SCb+PxrjCdO3n3ZTxJ30zuH39rimUggmTwmh2u7wvQsDTHESnmfQ==" crossorigin="anonymous"></script>
+    <script src="https://cdn.babylonjs.com/babylon.js"></script>
+    <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</head>
+<body class="dracula-theme">
+    <header>
+        <div class="switch-theme"></div>
+        <h1>NHL Stenden Emmen - F1 2023 SimRacing Dashboard</h1>
+        <div class="switch-theme">
+            <p><b>Dark</b></p>
+            <label class="switch">
+                <input type="checkbox">
+                <span class="slider round"></span>
+            </label>
+            <p><b>Light</b></p>
+        </div>
+    </header>
+    <hr class="white-line">
+    <div class="row-container">
+        <div class="dashboard-item" onclick="this.classList.toggle('flipped')">
+            <div id="simulation-front">
+                <h2>Simulation</h2>
+                <canvas id="renderCanvas"></canvas>
+            </div>
+
+            <div id="simulation-back">
+                <h2>Simulation Data</h2>
+                <div class="simulation-data">
+                    <div class="simulation-data-panel">
+                        <h3>World</h3>
+                        <p id="world-position-x"><b>Position X:</b> 0</p>
+                        <p id="world-position-y"><b>Position Y:</b> 0</p>
+                        <p id="world-position-z"><b>Position Z:</b> 0</p>
+                        <p id="world-rotation-yaw"><b>Rotation Yaw:</b> 0</p>
+                        <p id="world-rotation-pitch"><b>Rotation Pitch:</b> 0</p>
+                        <p id="world-rotation-roll"><b>Rotation Roll:</b> 0</p>
+                        <p id="world-velocity-x"><b>Velocity X:</b> 0</p>
+                        <p id="world-velocity-y"><b>Velocity Y:</b> 0</p>
+                        <p id="world-velocity-z"><b>Velocity Z:</b> 0</p>
+                        <p id="g-force-lat"><b>G-Force Lat:</b> 0</p>
+                        <p id="g-force-long"><b>G-Force Long:</b> 0</p>
+                        <p id="g-force-vert"><b>G-Force Vert:</b> 0</p>
+                    </div>
+                    <div class="simulation-data-panel">
+                        <h3>Local</h3>
+                        <p id="local-velocity-x"><b>Velocity X:</b> 0</p>
+                        <p id="local-velocity-y"><b>Velocity Y:</b> 0</p>
+                        <p id="local-velocity-z"><b>Velocity Z:</b> 0</p>
+                        <p id="local-front-wheels-angle"><b>Wheels Angle:</b> 0&deg;</p>
+                        <h3>Angular</h3>
+                        <p id="angular-velocity-x"><b>Velocity X:</b> 0</p>
+                        <p id="angular-velocity-y"><b>Velocity Y:</b> 0</p>
+                        <p id="angular-velocity-z"><b>Velocity Z:</b> 0</p>
+                        <p id="angular-acceleration-x"><b>Acceleration X:</b> 0</p>
+                        <p id="angular-acceleration-y"><b>Acceleration Y:</b> 0</p>
+                        <p id="angular-acceleration-z"><b>Acceleration Z:</b> 0</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="dashboard-item">
+            <h2>Velocity</h2>
+            <p id="kmh"></p>
+            <p id="rpm"></p>
+            <p id="gear"></p>
+        </div>
+        
+        <div class="dashboard-item">
+            <h2>Lap Times</h2>
+            <p id="lap-current">Current Lap: </p>
+            <p id="lap-last">Last Lap: </p>
+            <p id="lap-best">Best Lap: </p>
+            <p id="lap-delta">Delta Leader: </p>
+        </div>
+    </div>
+
+    <div class="row-container">
+        <div class="dashboard-item column-container">
+            <div class="small-item">
+                <h2>Circuit</h2>
+                <p id="track-position">Position: </p>
+                <p id="track-lap">Lap: </p>
+            </div>
+            <div class="small-item">
+                <h2>Fuel</h2>
+                <p id="fuel-tank">Tank: </p>
+                <p id="fuel-laps">Laps: </p>
+            </div>
+        </div>
+        <div class="dashboard-item">
+            <h2>Tyre Management</h2>
+            <div class="tyre-management-container">
+                <div class="tyre-management-side">
+                    <div>
+                        <p><b>Front Left Tyre</b></p>
+                        <div class="tyre-container">
+                            <p class="tyre-percentage">0%</p>
+                            <img class="tyre-image" src="../static/images/tyres/soft.svg"/>
+                        </div>
+                        <div class="tyre-container">
+                            <p class="tyre-temperature">0 &deg;C</p>
+                            <svg class="circle-svg" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="12" cy="12" r="11" stroke="green" stroke-width="2" fill="none" />
+                            </svg>
+                        </div>
+                        <div class="tyre-container">
+                            <p class="tyre-brakes-temperature">0 &deg;C</p>
+                            <img class="brake-temperature-icon" src="../static/images/brake-disc.svg" alt="brake icon"/>
+                        </div>
+                    </div>
+                    <div>
+                        <p><b>Back Left Tyre</b></p>
+                        <div class="tyre-container">
+                            <p class="tyre-percentage">0%</p>
+                            <img class="tyre-image" src="../static/images/tyres/soft.svg"/>
+                        </div>
+                        <div class="tyre-container">
+                            <p class="tyre-temperature">0 &deg;C</p>
+                            <svg class="circle-svg" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="12" cy="12" r="11" stroke="green" stroke-width="2" fill="none" />
+                            </svg>
+                        </div>
+                        <div class="tyre-container">
+                            <p class="tyre-brakes-temperature">0 &deg;C</p>
+                            <img class="brake-temperature-icon" src="../static/images/brake-disc.svg" alt="brake icon"/>
+                        </div>
+                    </div>
+                </div>              
+                <div class="tyre-management-side">
+                    <div>
+                        <p><b>Front Right Tyre</b></p>
+                        <div class="tyre-container">
+                            <p class="tyre-percentage">0%</p>
+                            <img class="tyre-image" src="../static/images/tyres/soft.svg"/>
+                        </div>
+                        <div class="tyre-container">
+                            <p class="tyre-temperature">0 &deg;C</p>
+                            <svg class="circle-svg" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="12" cy="12" r="11" stroke="green" stroke-width="2" fill="none" />
+                            </svg>
+                        </div>
+                        <div class="tyre-container">
+                            <p class="tyre-brakes-temperature">0 &deg;C</p>
+                            <img class="brake-temperature-icon" src="../static/images/brake-disc.svg" alt="brake icon"/>
+                        </div>
+                    </div>
+                    <div>
+                        <p><b>Back Right Tyre</b></p>
+                        <div class="tyre-container">
+                            <p class="tyre-percentage">0%</p>
+                            <img class="tyre-image" src="../static/images/tyres/soft.svg"/>
+                        </div>
+                        <div class="tyre-container">
+                            <p class="tyre-temperature">0 &deg;C</p>
+                            <svg class="circle-svg" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="12" cy="12" r="11" stroke="green" stroke-width="2" fill="none" />
+                            </svg>
+                        </div>
+                        <div class="tyre-container">
+                            <p class="tyre-brakes-temperature">0 &deg;C</p>
+                            <img class="brake-temperature-icon" src="../static/images/brake-disc.svg" alt="brake icon"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="dashboard-item double-container">
+            <div class="little-box-container">
+                <div class="little-box">
+                    <h2>DRS</h2>
+                    <p id="drs"></p>
+                </div>
+                
+                <div class="little-box">
+                    <h2>ERS</h2>
+                    <p id="ers-mode"></p>
+                    <p id="ers-energy">0%</p>
+                </div>
+            </div>
+                
+            <div class="normal-item">
+                <h2>Weather Forecast</h2>
+                <p id="weather">Unknown</p>
+                <p id="weather-time">0 min</p>
+                <br>
+                <p id="time-of-day">Time: 12:00</p>
+                <p id="weather-air-temperature">Air: 0&deg;C</p>
+                <p id="weather-track-temperature">Track: 0&deg;C</p>
+                <p id="weather-rain-percentage">Rain: 0%</p>
+            </div>
+        </div>
+    </div>
+    <div id="fullscreen-message">
+        <p>Sorry, your screen size is not supported for this dashboard. Please use a larger device for optimal viewing experience.</p>
+    </div>
+    <div id="fullscreen-packet-message">
+        <p>No data has been received, please make sure the game is running and connected.</p>
+        <button onclick="showAlways = true">Show Anyway</button>
+    </div>
+</body>
+</html>
